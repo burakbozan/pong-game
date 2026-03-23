@@ -1,0 +1,15 @@
+# Node.js build artifacts
+node_modules/
+build/
+*.log
+
+# Frontend build artifacts
+dist/
+*.css
+*.js
+
+# Backend build artifacts
+*.pem
+*.p12
+*.db
+*.sqlite
