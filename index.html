@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: black;
+        }
+        canvas {
+            border: 1px solid white;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="pong" width="800" height="400"></canvas>
+    <script>
+        const canvas = document.getElementById('pong');
+        const ctx = canvas.getContext('2d');
+
+        // Create the pong paddle
+        const paddleWidth = 10, paddleHeight = 100;
+        const player = {
+            x: 0,
+            y: canvas.height / 2 - paddleHeight / 2,
+            width: paddleWidth,
+            height: paddleHeight,
+            color: 'white',
+            score: 0
+        };
+
+        const computer = {
+            x: canvas.width - paddleWidth,
+            y: canvas.height / 2 - paddleHeight / 2,
+            width: paddleWidth,
+            height: paddleHeight,
+            color: 'white',
+            score: 0
+        };
+
+        // Create the pong ball
+        const ball = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            width: 10,
+            height: 10,
+            speedX: 5,
+            speedY: 5,
+            color: 'white'
+        };
+
+        // Draw everything
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawRect(player);
+            drawRect(computer);
+            drawBall(ball);
+        }
+
+        function drawRect(rect) {
+            ctx.fillStyle = rect.color;
+            ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+        }
+
+        function drawBall(ball) {
+            ctx.fillStyle = ball.color;
+            ctx.fillRect(ball.x, ball.y, ball.width, ball.height);
+        }
+
+        function update() {
+            // Move the ball
+            ball.x += ball.speedX;
+            ball.y += ball.speedY;
+            // Bounce the ball off the walls
+            if (ball.y + ball.height > canvas.height || ball.y < 0) {
+                ball.speedY = -ball.speedY;
+            }
+            // Bounce off the paddles
+            if (ball.x < player.x + player.width && ball.y > player.y && ball.y < player.y + player.height) {
+                ball.speedX = -ball.speedX;
+            }
+            if (ball.x + ball.width > computer.x && ball.y > computer.y && ball.y < computer.y + computer.height) {
+                ball.speedX = -ball.speedX;
+            }
+            // Reset ball if it goes off the screen
+            if (ball.x < 0 || ball.x > canvas.width) {
+                ball.x = canvas.width / 2;
+                ball.y = canvas.height / 2;
+            }
+        }
+
+        function gameLoop() {
+            draw();
+            update();
+            requestAnimationFrame(gameLoop);
+        }
+        gameLoop();
+    </script>
+</body>
+</html>
